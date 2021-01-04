@@ -1,0 +1,110 @@
+create database sewist;
+use sewist;
+
+CREATE TABLE `company` (
+  `comp_id` bigint NOT NULL AUTO_INCREMENT,
+  `comp_name` varchar(300) unique NOT NULL,
+  `comp_code` varchar(100) NOT NULL,
+  `comp_address` varchar(300) NOT NULL,
+  `comp_mobile1` bigint,
+  `comp_mobile2` bigint,
+  `comp_email` varchar(50),
+  `comp_validity` datetime,
+  `comp_business_dept` varchar(50),
+  `comp_postbox_no` varchar(50),
+  `comp_cash` numeric,
+  `comp_patty_cash` numeric,
+  `comp_create_date` datetime,
+  PRIMARY KEY (`comp_id`),
+  KEY `comp_code_fk` (`comp_code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+CREATE TABLE `user` (
+  `user_id` bigint NOT NULL AUTO_INCREMENT,
+  `user_name` varchar(300) unique NOT NULL,
+  `user_password` varchar(100) NOT NULL,
+  `user_fname` varchar(400) NOT NULL,
+  `user_mobile1` bigint,
+  `user_mobile2` bigint,
+  `user_email` varchar(50),
+  `user_create_date` datetime NOT NULL,
+  `user_comp_id` bigint NOT NULL,
+  PRIMARY KEY (`user_id`),
+  CONSTRAINT `user_comp_fk` FOREIGN KEY (`user_comp_id`) REFERENCES `company` (`comp_id`) on delete cascade on update cascade
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `role` (
+  `role_id` bigint NOT NULL AUTO_INCREMENT,
+  `role_name` varchar(255) DEFAULT NULL,
+   PRIMARY KEY (`role_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `users_roles` (
+  `user_id` bigint NOT NULL,
+  `role_id` bigint NOT NULL,
+  KEY `users_roles_role_id_key` (`role_id`),
+  KEY `users_roles_user_id_key` (`user_id`),
+  CONSTRAINT `users_roles_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`),
+  CONSTRAINT `users_roles_role_id_fk` FOREIGN KEY (`role_id`) REFERENCES `role` (`role_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+CREATE TABLE `customer` (
+  `customer_id` bigint NOT NULL AUTO_INCREMENT,
+  `customer_name` varchar(200) NOT NULL,
+  `customer_address` varchar(300) NOT NULL,
+  `customer_mobile1` bigint,
+  `customer_mobile2` bigint,
+  `customer_phone` bigint,
+  `customer_email` varchar(200),
+  `customer_due_amount` numeric DEFAULT 0,
+  `customer_status` varchar(20),
+  `customer_comment` varchar(1000),
+  `customer_gender` varchar(10),
+  `customer_comp_id` bigint,
+  `customer_comp_name` varchar(300) NOT NULL,
+  `customer_user_id` bigint NOT NULL,
+  `customer_user_name` varchar(300),
+  PRIMARY KEY (`customer_id`),
+  CONSTRAINT `customer_comp_id_fk` FOREIGN KEY (`customer_comp_id`) REFERENCES `company` (`comp_id`) on delete cascade on update cascade,
+  CONSTRAINT `customer_comp_name_fk` FOREIGN KEY (`customer_comp_name`) REFERENCES `company` (`comp_name`) on delete cascade on update cascade,
+  CONSTRAINT `customer_user_id_fk` FOREIGN KEY (`customer_user_id`) REFERENCES `user` (`user_id`) on delete cascade on update cascade,
+  CONSTRAINT `customer_user_name_fk` FOREIGN KEY (`customer_user_name`) REFERENCES `user` (`user_name`) on delete cascade on update cascade
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+CREATE TABLE `customer_family_member` (
+  `cust_family_mem_id` bigint NOT NULL AUTO_INCREMENT,
+  `cust_family_mem_name` varchar(200) NOT NULL,
+  `cust_family_mem_gender` varchar(10),
+  `cust_family_mem_customer_id` bigint,
+  PRIMARY KEY (`cust_family_mem_id`),
+  CONSTRAINT `family_mem_customer_id_fk` FOREIGN KEY (`cust_family_mem_customer_id`) REFERENCES `customer` (`customer_id`) on delete cascade on update cascade
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `product` (
+  `product_id` bigint NOT NULL AUTO_INCREMENT,
+  `product_code` varchar(200) NOT NULL,
+  `product_name` varchar(200) unique NOT NULL,
+  `product_percentage` numeric,
+  `product_rate` numeric,
+  `product_create_date` datetime,
+  `product_update_date` datetime,
+  `sec_last_prod_percentage` numeric,
+  `sec_last_prode_rate` numeric,
+  `product_comp_id` bigint,
+  PRIMARY KEY (`product_id`),
+  CONSTRAINT `product_comp_id_fk` FOREIGN KEY (`product_comp_id`) REFERENCES `company` (`comp_id`) on delete cascade on update cascade
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `product_measurment` (
+  `prod_measur_id` bigint NOT NULL AUTO_INCREMENT,
+  `prod_measur_prod_id` bigint,
+  `prod_measur_pro_name` varchar(200),
+  `prod_measur_name` varchar(200),
+  `prod_measur_photo` mediumblob,
+  PRIMARY KEY (`prod_measur_id`),
+  CONSTRAINT `prod_measur_pro_id_fk` FOREIGN KEY (`prod_measur_prod_id`) REFERENCES `product` (`product_id`) on delete cascade on update cascade,
+  CONSTRAINT `prod_measur_pro_name_fk` FOREIGN KEY (`prod_measur_pro_name`) REFERENCES `product` (`product_name`) on delete cascade on update cascade
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
