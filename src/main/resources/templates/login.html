@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{css/nav.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{css/login.css}"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <title>Registration</title>
+</head>
+<body>
+<div th:replace="fragments/header :: header"/>
+<div class="back">
+
+    <br>
+    <br>
+    <div class="login-form">
+        <form th:action="@{/login}" method="post">
+            <div class="avatar"><i class="material-icons">&#xE7FF;</i></div>
+            <h4 class="modal-title">Login to Your Account</h4>
+            <div th:if="${param.error}">
+                <div class=""style="color:#ff0000">Invalid username or password.
+                </div>
+            </div>
+            <div th:if="${param.logout}">
+                <div class="alert alert-info">You have been logged out.</div>
+            </div>
+            <div class="form-group">
+                <input type="text"id="username" name="username" class="form-control" placeholder="Username" required="required">
+            </div>
+            <div class="form-group">
+                <input type="password" id="password" name="password" class="form-control" placeholder="Password" required="required">
+            </div>
+            <div class="form-group small clearfix">
+
+                <a href="#" th:href="@{/forgot-password}" class="forgot-link">Forgot Password?</a>
+            </div>
+            <input type="submit" class="btn btn-primary btn-block btn-lg" value="Login">
+        </form>
+
+    </div>
+
+
+</div>
+</body>
+
+<script>
+    const navSlide = () => {
+        const burger = document.querySelector('.burger');
+        const nav = document.querySelector('.nav-links');
+        const navLinks = document.querySelectorAll('.nav-links li');
+        //Toggle Nav
+        burger.addEventListener('click', () => {
+            nav.classList.toggle('nav-active');
+            //Animate Links
+            navLinks.forEach((link, index) => {
+                if (link.style.animation) {
+                    link.style.animation = '';
+                } else {
+                    link.style.animation = `navLinkFade 0.5s ease forwards ${index / 7 + 0.5}s`;
+                }
+            });
+            //burger animation
+            burger.classList.toggle('toggle');
+        });
+    };
+    navSlide();
+
+
+</script>
+</html>

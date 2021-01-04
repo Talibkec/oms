@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+    <th:block th:include="fragments/header.html :: headerCSS"/>
+    <th:block th:include="superadmin/sidebar.html :: headerAdmin"/>
+
+</head>
+
+<div th:replace="superadmin/sidebar.html :: superadmin"/>
+<div class="form_wrapper">
+    <div class="form_container">
+        <div class="title_container">
+            <div th:if="${param.success}">
+                <div class="alert alert-info">You've successfully registered to our awesome app!</div>
+            </div>
+            <h2>Register a Super Admin</h2>
+        </div>
+        <div class="row clearfix">
+            <div class="">
+                <form th:action="@{/registration}" th:object="${user}" method="post">
+                    <p class="error-message" th:if="${#fields.hasGlobalErrors()}" th:each="error : ${#fields.errors('global')}" th:text="${error}">Validation error
+                    </p>
+                    <div class="input_field" th:classappend="${#fields.hasErrors('email')}? 'has-error':''"> <span><i aria-hidden="true" class="fa fa-envelope"></i></span>
+                        <input type="email"th:field="*{email}" placeholder="Email" required />
+                    </div>
+                    <div class="input_field"th:classappend="${#fields.hasErrors('password')}? 'has-error':''"> <span><i aria-hidden="true" class="fa fa-lock"></i></span>
+                        <input type="password"id="password"  th:field="*{password}" name="password" placeholder="Password" required />
+                        <p class="error-message" th:each="error : ${#fields.errors('password')}" th:text="${error}">Validation error</p>
+                    </div>
+                    <div class="input_field"th:classappend="${#fields.hasErrors('confirmPassword')}? 'has-error':''" > <span><i aria-hidden="true" class="fa fa-lock"></i></span>
+                        <input type="password"id="confirmPassword" name="confirmPassword" th:field="*{confirmPassword}" placeholder="Re-type Password" required />
+                        <p class="error-message" th:each="error : ${#fields.errors('confirmPassword')}" th:text="${error}">Validation error</p>
+                    </div>
+                    <div class="row clearfix">
+                        <div class="col_half">
+                            <div class="input_field" th:classappend="${#fields.hasErrors('firstName')}? 'has-error':''"> <span><i aria-hidden="true" class="fa fa-user"></i></span>
+                                <input type="text" id="firstname"  placeholder="First Name" th:field="*{firstName}" />
+                                <p class="error-message" th:each="error: ${#fields.errors('firstName')}" th:text="${error}">Validation error</p>
+                            </div>
+                        </div>
+                        <div class="col_half">
+                            <div class="input_field"th:classappend="${#fields.hasErrors('lastName')}? 'has-error':''"> <span><i aria-hidden="true" class="fa fa-user"></i></span>
+                                <input type="text" id="lastname" placeholder="Last Name" required th:field="*{lastName}" />
+                                <p class="error-message" th:each="error : ${#fields.errors('lastName')}" th:text="${error}">Validation error</p>
+                            </div>
+                        </div>
+                    </div>
+                    <input class="button" type="submit" value="Register" />
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src='https://use.fontawesome.com/4ecc3dbb0b.js'></script>
+
+</body>
+</html>
